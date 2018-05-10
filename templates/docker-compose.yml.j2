@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  elasticsearch:
+    image: {{ elasticsearch_docker_image }}:{{ elasticsearch_version }}
+    deploy:
+      mode: replicated
+      replicas: {{ elasticsearch_num_nodes }}
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - {{ elasticsearch_logs_path }}:/var/log/elasticsearch
+      - {{ elasticsearch_data_path }}:/var/data/elasticsearch
+    environment:
+      - "cluster.name={{ elasticsearch_cluster_name }}"
+      - "network.host={{ elasticsearch_network_host }}"
+      - "gateway.expected_nodes={{ elasticsearch_num_nodes }}"
+      - "discovery.zen.minimum_master_nodes={{ elasticsearch_zen_min_masters }}"
+    # see also:
+    #   * Heap Size. Default: 1G.
+    #   * Heap Dump Path. Default: /var/lib/elasticsearch https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-dump-path.html#heap-dump-path
+    #   *
+
+  kibana:
+    image: {{ elasticsearch_kibana_docker_image }}:{{ elasticsearch_version }}
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - 5601
+    volumes:
+      - {{ elasticsearch_logs_path }}:/var/log/kibana
+      - {{ elasticsearch_data_path }}:/var/data/kibana
+    environment:
+      - "elasticsearch.url=http://elasticsearch:9200"
+      - "logging.dest=/var/log/kibana"
+      - "path.data=/var/data/kibana"
+      - "server.host={{ elasticsearch_kibana_network_host }}"

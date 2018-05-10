@@ -1,0 +1,30 @@
+---
+
+- name: set max_map_count to 262144 (req'd by elasticsearch, skipped during docker testing)
+  sysctl:
+    name: vm.max_map_count
+    value: 262144
+  when: elasticsearch_role_test_mode == False
+
+
+- name: make sure mount paths exist
+  file:
+    state: directory
+    path: "{{ item }}"
+  with_items:
+    - "{{ elasticsearch_logs_path }}"
+    - "{{ elasticsearch_data_path }}"
+
+
+- name: write template to temp location
+  template:
+    src: templates/docker-compose.yml.j2
+    dest: /tmp/elasticsearch-docker-compose.yml
+
+# - name: run docker stack
+#   shell: docker stack deploy -c /tmp/elasticsearch-docker-compose.yml elasticsearch
+#
+- name: run docker stack
+  shell: docker stack deploy -c /tmp/elasticsearch-docker-compose.yml elasticsearch
+
+- debug: msg="WARNING! The docker stack command does not return an error if the stack doesn't launch properly."
