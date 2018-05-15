@@ -7,14 +7,17 @@ galaxy_info:
   min_ansible_version: 2.1
 
   platforms:
-  - name: CentOS
+  - name: EL
     versions:
       - 7
   - name: Ubuntu
     versions:
-    - 16.04
-    - 17.04
-    - 18.04
+    - bionic
+    - artful
+    - zesty
+    - yakkety
+    - xenial
+    - wily
 
   galaxy_tags:
     - docker
