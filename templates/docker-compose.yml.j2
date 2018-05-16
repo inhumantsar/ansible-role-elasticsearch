@@ -1,4 +1,4 @@
-version: "3"
+version: "3.2"
 
 services:
   elasticsearch:
@@ -32,7 +32,8 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - 5601
+      - target: 5601
+        published: {{ elasticsearch_kibana_hostport }}
     volumes:
       - {{ elasticsearch_logs_path }}:/var/log/kibana
       - {{ elasticsearch_data_path }}:/var/data/kibana
