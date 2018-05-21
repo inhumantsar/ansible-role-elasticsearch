@@ -35,7 +35,7 @@ services:
       - target: 5601
         published: {{ elasticsearch_kibana_hostport }}
         protocol: tcp
-        mode: host
+        mode: ingress
     volumes:
       - {{ elasticsearch_logs_path }}:/var/log/kibana
       - {{ elasticsearch_data_path }}:/var/data/kibana
