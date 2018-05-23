@@ -12,8 +12,9 @@
     state: directory
     path: "{{ item }}"
   with_items:
-    - "{{ elasticsearch_logs_path }}"
-    - "{{ elasticsearch_data_path }}"
+    - "{{ elasticsearch_logs_hostpath }}"
+    - "{{ elasticsearch_data_hostpath }}"
+    - "{{ elasticsearch_kibana_data_hostpath }}"
 
 
 - name: write template to temp location

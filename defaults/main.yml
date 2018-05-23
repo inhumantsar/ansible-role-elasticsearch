@@ -3,8 +3,8 @@ elasticsearch_version: 6.2.4
 elasticsearch_docker_image: docker.elastic.co/elasticsearch/elasticsearch # version tag is appended
 elasticsearch_docker_auth: '' # ignored if empty
 
-elasticsearch_logs_path: /opt/elasticsearch/logs
-elasticsearch_data_path: /opt/elasticsearch/data
+elasticsearch_logs_hostpath: /opt/elasticsearch/logs
+elasticsearch_data_hostpath: /opt/elasticsearch/data
 
 elasticsearch_num_nodes: 1 # number of es nodes to launch
 elasticsearch_cluster_name: elasticsearch
@@ -14,8 +14,13 @@ elasticsearch_zen_min_masters: 1
 # set to true to launch kibana
 elasticsearch_kibana: True
 elasticsearch_kibana_docker_image: docker.elastic.co/kibana/kibana # version tag is appended
-elasticsearch_kibana_hostport: 80
-elasticsearch_kibana_network_host: '_site_' # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html#network-interface-values
+elasticsearch_kibana_hostport: 5601
+elasticsearch_kibana_network_host: '0.0.0.0'
+elasticsearch_kibana_data_hostpath: /opt/kibana/data
 
 # set to true when testing in docker to avoid sysctl issues
 elasticsearch_role_test_mode: False
+
+# deployment labels for docker stack
+elasticsearch_deploy_labels: ~
+elasticsearch_kibana_deploy_labels: ~

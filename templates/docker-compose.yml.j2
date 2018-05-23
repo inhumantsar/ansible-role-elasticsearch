@@ -12,8 +12,8 @@ services:
       restart_policy:
         condition: on-failure
     volumes:
-      - {{ elasticsearch_logs_path }}:/var/log/elasticsearch
-      - {{ elasticsearch_data_path }}:/var/data/elasticsearch
+      - {{ elasticsearch_logs_hostpath }}:/var/log/elasticsearch
+      - {{ elasticsearch_data_hostpath }}:/var/data/elasticsearch
     environment:
       - "cluster.name={{ elasticsearch_cluster_name }}"
       - "network.host={{ elasticsearch_network_host }}"
@@ -23,7 +23,7 @@ services:
     #   * Heap Size. Default: 1G.
     #   * Heap Dump Path. Default: /var/lib/elasticsearch https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-dump-path.html#heap-dump-path
     #   *
-
+{% if elasticsearch_kibana %}
   kibana:
     image: {{ elasticsearch_kibana_docker_image }}:{{ elasticsearch_version }}
     deploy:
@@ -31,14 +31,18 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      labels:
+{% if elasticsearch_kibana_deploy_labels %}
+{% for label in elasticsearch_kibana_deploy_labels %}
+        - {{ label }}
+{% endfor %}
+{%- endif %}
     ports:
-      - target: 5601
-        published: {{ elasticsearch_kibana_hostport }}
+      - "5601:{{ elasticsearch_kibana_hostport }}"
     volumes:
-      - {{ elasticsearch_logs_path }}:/var/log/kibana
-      - {{ elasticsearch_data_path }}:/var/data/kibana
+      - "{{ elasticsearch_kibana_data_hostpath }}:/usr/share/kibana/data"
     environment:
-      - "elasticsearch.url=http://elasticsearch:9200"
-      - "logging.dest=/var/log/kibana"
-      - "path.data=/var/data/kibana"
-      - "server.host={{ elasticsearch_kibana_network_host }}"
+      - "ELASTICSEARCH_URL=http://elasticsearch:9200"
+      - "SERVER_HOST={{ elasticsearch_kibana_network_host }}"
+      - "XPACK_REPORTING_ENABLED=false"
+{%- endif %}
