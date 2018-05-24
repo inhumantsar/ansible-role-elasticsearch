@@ -11,6 +11,8 @@ services:
         delay: 10s
       restart_policy:
         condition: on-failure
+    networks:
+      - elastic_net
     volumes:
       - {{ elasticsearch_logs_hostpath }}:/var/log/elasticsearch
       - {{ elasticsearch_data_hostpath }}:/var/data/elasticsearch
@@ -31,12 +33,17 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-      labels:
 {% if elasticsearch_kibana_deploy_labels %}
-{% for label in elasticsearch_kibana_deploy_labels %}
-        - {{ label }}
+    labels:
+{% for key, value in elasticsearch_kibana_deploy_labels.items() %}
+      {{ key }}: {{ value }}
 {% endfor %}
 {%- endif %}
+    networks:
+      - elastic_net
+{% for net in elasticsearch_kibana_networks %}
+      - {{ net }}
+{% endfor %}
     ports:
       - "5601:{{ elasticsearch_kibana_hostport }}"
     volumes:
@@ -46,3 +53,12 @@ services:
       - "SERVER_HOST={{ elasticsearch_kibana_network_host }}"
       - "XPACK_REPORTING_ENABLED=false"
 {%- endif %}
+
+networks:
+  elastic_net:
+    driver: overlay
+{% for net in elasticsearch_kibana_networks %}
+  {{ net }}:
+    external: true
+
+{% endfor %}

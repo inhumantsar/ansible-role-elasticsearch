@@ -24,3 +24,6 @@ elasticsearch_role_test_mode: False
 # deployment labels for docker stack
 elasticsearch_deploy_labels: ~
 elasticsearch_kibana_deploy_labels: ~
+
+# additional networks for kibana (eg: reverse proxy net)
+elasticsearch_kibana_networks: []
