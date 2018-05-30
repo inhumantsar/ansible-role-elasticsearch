@@ -11,6 +11,10 @@ elasticsearch_cluster_name: elasticsearch
 elasticsearch_network_host: '_site_' # https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html#network-interface-values
 elasticsearch_zen_min_masters: 1
 
+# env vars to modify other elasticsearch configs
+elasticsearch_env_vars: {}
+
+
 # set to true to launch kibana
 elasticsearch_kibana: True
 elasticsearch_kibana_docker_image: docker.elastic.co/kibana/kibana # version tag is appended
@@ -27,3 +31,7 @@ elasticsearch_kibana_deploy_labels: ~
 
 # additional networks for kibana (eg: reverse proxy net)
 elasticsearch_kibana_networks: []
+
+# env vars to modify kibana.yml configs
+elasticsearch_kibana_env_vars: {}
+#  SERVER_BASEPATH: /kibana/    # eg to configure server.basePath

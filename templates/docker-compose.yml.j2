@@ -17,10 +17,13 @@ services:
       - {{ elasticsearch_logs_hostpath }}:/var/log/elasticsearch
       - {{ elasticsearch_data_hostpath }}:/var/data/elasticsearch
     environment:
-      - "cluster.name={{ elasticsearch_cluster_name }}"
-      - "network.host={{ elasticsearch_network_host }}"
-      - "gateway.expected_nodes={{ elasticsearch_num_nodes }}"
-      - "discovery.zen.minimum_master_nodes={{ elasticsearch_zen_min_masters }}"
+      - "CLUSTER_NAME={{ elasticsearch_cluster_name }}"
+      - "NETWORK_HOST={{ elasticsearch_network_host }}"
+      - "GATEWAY_EXPECTED_NODES={{ elasticsearch_num_nodes }}"
+      - "DISCOVER_ZEN_MINIMUM_MASTER_NODES={{ elasticsearch_zen_min_masters }}"
+{% for k, v in elasticsearch_env_vars.items() %}
+      - "{{ k }}={{ v }}"
+{% endfor %}
     # see also:
     #   * Heap Size. Default: 1G.
     #   * Heap Dump Path. Default: /var/lib/elasticsearch https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-dump-path.html#heap-dump-path
@@ -51,7 +54,12 @@ services:
     environment:
       - "ELASTICSEARCH_URL=http://elasticsearch:9200"
       - "SERVER_HOST={{ elasticsearch_kibana_network_host }}"
+      # This is for a bug: https://discuss.elastic.co/t/kibana-not-working-after-install-x-pack/131435/6
       - "XPACK_REPORTING_ENABLED=false"
+{% for k, v in elasticsearch_kibana_env_vars.items() %}
+      - "{{ k }}={{ v }}"
+{% endfor %}
+
 {%- endif %}
 
 networks:

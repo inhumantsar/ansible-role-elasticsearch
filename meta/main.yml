@@ -12,12 +12,12 @@ galaxy_info:
       - 7
   - name: Ubuntu
     versions:
-    - bionic
-    - artful
-    - zesty
-    - yakkety
-    - xenial
-    - wily
+      - bionic
+      - artful
+      - zesty
+      - yakkety
+      - xenial
+      - wily
 
   galaxy_tags:
     - docker
