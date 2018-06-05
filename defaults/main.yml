@@ -1,4 +1,7 @@
 ---
+################################
+# Elasticsearch
+################################
 elasticsearch_version: 6.2.4
 elasticsearch_docker_image: docker.elastic.co/elasticsearch/elasticsearch # version tag is appended
 elasticsearch_docker_auth: '' # ignored if empty
@@ -14,6 +17,12 @@ elasticsearch_zen_min_masters: 1
 # env vars to modify other elasticsearch configs
 elasticsearch_env_vars: {}
 
+# additional networks for elasticsearch (eg: reverse proxy net)
+elasticsearch_networks: []
+
+################################
+# Kibana
+################################
 
 # set to true to launch kibana
 elasticsearch_kibana: True

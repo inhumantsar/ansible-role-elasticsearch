@@ -13,6 +13,9 @@ services:
         condition: on-failure
     networks:
       - elastic_net
+{% for net in elasticsearch_networks %}
+      - {{ net }}
+{% endfor %}
     volumes:
       - {{ elasticsearch_logs_hostpath }}:/var/log/elasticsearch
       - {{ elasticsearch_data_hostpath }}:/var/data/elasticsearch
@@ -65,7 +68,7 @@ services:
 networks:
   elastic_net:
     driver: overlay
-{% for net in elasticsearch_kibana_networks %}
+{% for net in elasticsearch_networks|list + elasticsearch_kibana_networks|list %}
   {{ net }}:
     external: true
 
